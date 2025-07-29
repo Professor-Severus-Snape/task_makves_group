@@ -1,58 +1,88 @@
 import { useState } from 'react';
+import { ThemeProvider } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { bottomRoutes, routes } from '../../data/routes';
+import { themes } from '../../themes';
+import type { TColor } from '../../models/models';
+import {
+  CollapseButton,
+  Header,
+  LogoImg,
+  LogoText,
+  NavWrapper,
+  NavItem,
+  SidebarContainer,
+  ThemeSwitcherButton,
+} from './Sidebar.styles';
 import logo from '../../assets/logo.png';
 
-const Sidebar = ({ color }: { color: string }) => {
-  console.log('color: ', color); // NOTE: временная заглушка для ts
-  const [isOpened, setIsOpened] = useState(false);
+interface ISidebarProps {
+  color: TColor;
+}
 
-  const goToRoute = (path: string) => {
-    console.log(`going to "${path}"`);
+const Sidebar = ({ color }: ISidebarProps) => {
+  const [isOpened, setIsOpened] = useState<boolean>(true);
+  const [themeName, setThemeName] = useState<TColor>(color);
+  const [activeRoute, setActiveRoute] = useState<string>(routes[0].title);
+
+  const handleCollapseSidebar = () => {
+    setIsOpened((prev) => !prev);
   };
 
-  const toggleSidebar = () => {
-    setIsOpened((v) => !v);
+  const handleMenuItemClick = (title: string) => {
+    setActiveRoute(title);
   };
+
+  const handleToggleTheme = () => {
+    setThemeName((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  const currentTheme = themes[themeName];
 
   return (
-    <div>
-      <div>
-        <img src={logo} alt="TensorFlow logo" />
-        <span>TensorFlow</span>
-        <div onClick={toggleSidebar}>
-          <FontAwesomeIcon icon={isOpened ? 'angle-left' : 'angle-right'} />
-        </div>
-      </div>
+    <ThemeProvider theme={currentTheme}>
+      <SidebarContainer isOpened={isOpened}>
+        <Header>
+          <LogoImg src={logo} alt="logo" />
+          <LogoText isOpened={isOpened}>TensorFlow</LogoText>
+          <CollapseButton isOpened={isOpened} onClick={handleCollapseSidebar}>
+            <FontAwesomeIcon icon={isOpened ? 'angle-left' : 'angle-right'} />
+          </CollapseButton>
+        </Header>
 
-      <div>
-        {routes.map((route) => (
-          <div
-            key={route.title}
-            onClick={() => {
-              goToRoute(route.path);
-            }}
-          >
-            <FontAwesomeIcon icon={route.icon} />
-            <span>{route.title}</span>
-          </div>
-        ))}
-      </div>
+        <NavWrapper>
+          {routes.map((route) => (
+            <NavItem
+              key={route.title}
+              isOpened={isOpened}
+              isActive={activeRoute === route.title}
+              onClick={() => handleMenuItemClick(route.title)}
+            >
+              <FontAwesomeIcon icon={route.icon} />
+              <span>{route.title}</span>
+            </NavItem>
+          ))}
+        </NavWrapper>
 
-      <div>
-        {bottomRoutes.map((route) => (
-          <div
-            key={route.title}
-            onClick={() => {
-              goToRoute(route.path);
-            }}
-          >
-            <FontAwesomeIcon icon={route.icon} />
-            <span>{route.title}</span>
-          </div>
-        ))}
-      </div>
-    </div>
+        <NavWrapper>
+          {bottomRoutes.map((route) => (
+            <NavItem
+              key={route.title}
+              isOpened={isOpened}
+              isActive={activeRoute === route.title}
+              onClick={() => handleMenuItemClick(route.title)}
+            >
+              <FontAwesomeIcon icon={route.icon} />
+              <span>{route.title}</span>
+            </NavItem>
+          ))}
+        </NavWrapper>
+
+        <ThemeSwitcherButton onClick={handleToggleTheme}>
+          <FontAwesomeIcon icon={themeName === 'light' ? 'moon' : 'sun'} />
+        </ThemeSwitcherButton>
+      </SidebarContainer>
+    </ThemeProvider>
   );
 };
 
