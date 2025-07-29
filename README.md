@@ -1,3 +1,5 @@
+![CI](https://github.com/professor-severus-snape/task_makves_group/actions/workflows/web.yml/badge.svg)
+
 # Тестовое задание для компании «Makves group»
 
 Ссылка на исходный репозиторий с заданием - [здесь](https://github.com/Alaladdin/frontend-html-task)
