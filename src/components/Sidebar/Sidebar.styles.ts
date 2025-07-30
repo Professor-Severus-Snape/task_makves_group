@@ -25,6 +25,9 @@ export const SidebarContainer = styled.aside.withConfig({
   outline: 2px solid ${(props) => props.theme.sidebarBgActive};
   outline-offset: -5px;
   transition: width 0.3s;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 `;
 
 export const Header = styled.header`
@@ -44,7 +47,7 @@ export const LogoText = styled.span.withConfig({
   font-weight: bold;
   color: ${(props) => props.theme.logo};
   white-space: nowrap;
-  overflow: 'hidden';
+  overflow: hidden;
   opacity: ${(props) => (props.isOpened ? 1 : 0)};
   transition: opacity 0.3s;
 `;
@@ -64,7 +67,7 @@ export const CollapseButton = styled.button.withConfig({
     props.isOpened ? props.theme.sidebarBgActive : props.theme.sidebarBg};
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  transition: right 0.3s, background-color 0.3s;
+  transition: right 0.3s;
 `;
 
 export const NavWrapper = styled.nav`
